@@ -28,7 +28,10 @@ export interface GoogleOAuthConfig {
 }
 
 export function getGoogleOAuthConfig(): GoogleOAuthConfig {
-  const env = (typeof process !== 'undefined' && process.env) || {};
+  const env: Record<string, string | undefined> =
+    typeof process !== 'undefined' && process.env
+      ? (process.env as Record<string, string | undefined>)
+      : {};
   const webClientId = env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_WEB?.trim() || undefined;
   const androidClientId = env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_ANDROID?.trim() || undefined;
   const iosClientId = env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS?.trim() || undefined;
