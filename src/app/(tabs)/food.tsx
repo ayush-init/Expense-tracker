@@ -15,6 +15,7 @@ import {
   StatusChip,
 } from '../../components/ui';
 import { CalendarDayStatus, CustomCalendar } from '../../components/ui/CustomCalendar';
+import { FoodCycleBreakdownCard } from '../../components/food/FoodCycleBreakdownCard';
 import { useApp } from '../../context/AppContext';
 import { Colors, Radii, Spacing, Typography } from '../../theme/tokens';
 import {
@@ -220,77 +221,17 @@ export default function FoodScreen() {
       </View>
 
       {/* Current Food Settlement Cycle Summary Card */}
-      <GlassCard variant="highlight" style={styles.sectionCard}>
-        <View style={styles.rowBetween}>
-          <View>
-            <Text style={styles.cycleBadge}>
-              ACTIVE SETTLEMENT CYCLE • SINCE {activeFoodCycle?.startDate ?? 'TODAY'}
-            </Text>
-            <Text style={styles.cycleTitle}>
-              {activeHousehold?.foodProviderName ?? 'Rox'} Running Bill
-            </Text>
-          </View>
-          <StatusChip
-            label={`${activeFoodCycleSummary?.totalMealsCount ?? 0} Total Meals`}
-            tone="info"
-            icon="restaurant-outline"
-          />
-        </View>
-
-        <View style={styles.cycleMetricsGrid}>
-          <View style={styles.metricItem}>
-            <AmountDisplay
-              label="Total Cycle Charge"
-              paise={activeFoodCycleSummary?.totalAmountPaise ?? 0}
-              size="md"
-            />
-          </View>
-          <View style={styles.metricItem}>
-            <AmountDisplay
-              label="Already Settled"
-              paise={activeFoodCycleSummary?.settledAmountPaise ?? 0}
-              size="md"
-              tone="positive"
-            />
-          </View>
-          <View style={styles.metricItem}>
-            <AmountDisplay
-              label="Outstanding Now"
-              paise={activeFoodCycleSummary?.outstandingAmountPaise ?? 0}
-              size="md"
-              tone="brand"
-            />
-          </View>
-        </View>
-
-        {/* Member-wise Meal Breakdown inside Current Cycle */}
-        <View style={styles.memberBreakdownBox}>
-          <Text style={styles.subHeader}>Member-Wise Cycle Totals:</Text>
-          {members.map((m) => {
-            const b = activeFoodCycleSummary?.memberBreakdown[m.userId];
-            return (
-              <View key={m.userId} style={styles.memberCycleRow}>
-                <Text style={styles.memberCycleName}>
-                  {m.profile.fullName} ({b?.lunchCount ?? 0}L + {b?.dinnerCount ?? 0}D
-                  {b?.skippedCount ? `, ${b.skippedCount} skipped` : ''})
-                </Text>
-                <Text style={styles.memberCycleAmount}>
-                  {formatINR(b?.totalChargePaise ?? 0)}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={styles.settleBtnRow}>
-          <GlassButton
-            title={`Settle ${activeHousehold?.foodProviderName ?? 'Rox'} Bill (Full / Partial)`}
-            icon="checkmark-done-circle-outline"
-            onPress={openSettleModal}
-            disabled={(activeFoodCycleSummary?.outstandingAmountPaise ?? 0) <= 0}
-          />
-        </View>
-      </GlassCard>
+      {activeFoodCycle && activeFoodCycleSummary ? (
+        <FoodCycleBreakdownCard
+          cycle={activeFoodCycle}
+          summary={activeFoodCycleSummary}
+          members={members}
+          settlements={foodSettlements}
+          defaultMealPricePaise={activeHousehold?.defaultMealPricePaise ?? 8000}
+          onPressSettle={openSettleModal}
+          onPressHistory={() => setHistoryModalOpen(true)}
+        />
+      ) : null}
 
       {/* Personal Calendar Selector (Personal by default; Admin can inspect/correct) */}
       <GlassCard padding="sm" style={styles.sectionCard}>
