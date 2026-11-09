@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "RoomSync",
+    "slug": "roomsync",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "roomsync",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#F4F7FB",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.roomsync.app",
+      "userInterfaceStyle": "light"
+    },
+    "android": {
+      "package": "com.roomsync.app",
+      "userInterfaceStyle": "light",
+      "adaptiveIcon": {
+        "backgroundColor": "#F4F7FB"
+      },
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "NOTIFICATIONS"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "color": "#2563EB"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow RoomSync to attach bill receipts and payment screenshots."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
