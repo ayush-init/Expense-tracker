@@ -7,7 +7,6 @@
  *   roommates are never spammed.
  */
 
-import { Platform } from 'react-native';
 import { NotificationItem } from '../types/models';
 import { RoomSyncDatabase } from './database';
 
@@ -25,7 +24,10 @@ export class NotificationService {
     this.database = database;
   }
 
-  public async registerDevicePushToken(userId: string): Promise<PushRegistrationResult> {
+  public async registerDevicePushToken(
+    userId: string,
+    platform = 'android'
+  ): Promise<PushRegistrationResult> {
     try {
       const Notifications = await import('expo-notifications');
       const perm = await Notifications.getPermissionsAsync();
@@ -45,12 +47,12 @@ export class NotificationService {
 
       const tokenResponse = await Notifications.getExpoPushTokenAsync();
       const token = tokenResponse.data;
-      this.savePushToken(userId, token, Platform.OS);
+      this.savePushToken(userId, token, platform);
       return { granted: true, pushToken: token };
     } catch {
       // Fallback token registration when running in web/simulator or without EAS Push credentials
-      const fallbackToken = `ExpoPushToken[sim-${userId}-${Platform.OS}]`;
-      this.savePushToken(userId, fallbackToken, Platform.OS);
+      const fallbackToken = `ExpoPushToken[sim-${userId}-${platform}]`;
+      this.savePushToken(userId, fallbackToken, platform);
       return {
         granted: true,
         pushToken: fallbackToken,
